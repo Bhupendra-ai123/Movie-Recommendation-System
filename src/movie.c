@@ -1,33 +1,19 @@
 
-/*
- * ============================================================
- *   MOVIE RECOMMENDATION SYSTEM
- *   Language  : C (C99)
- *   Concepts  : Singly Linked List + Stack (Undo)
- *   Author    : Group Project
- * ============================================================
- */
  
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
  
-/* ============================================================
-   SECTION 1 — DATA STRUCTURES
-   ============================================================ */
- 
-/* ---------- Movie Node (Linked List) ---------- */
 typedef struct Movie {
     int   id;
     char  title[100];
     char  genre[50];
     int   year;
-    float rating;     /* 0.0 – 10.0 */
-    int   watched;    /* 0 = No, 1 = Yes */
+    float rating;    
+    int   watched;    
     struct Movie* next;
 } Movie;
- 
-/* ---------- Action Types for Undo Stack ---------- */
+
 typedef enum {
     ACTION_ADD,
     ACTION_DELETE,
@@ -35,7 +21,7 @@ typedef enum {
     ACTION_WATCH
 } ActionType;
  
-/* ---------- Stack Node ---------- */
+
 typedef struct StackNode {
     ActionType type;
     int        id;
@@ -47,14 +33,10 @@ typedef struct StackNode {
     struct StackNode* next;
 } StackNode;
  
-/* ---------- Stack (top pointer) ---------- */
+
 StackNode* stackTop = NULL;
  
-/* ============================================================
-   SECTION 2 — STACK OPERATIONS
-   ============================================================ */
- 
-/* Push a new action onto the stack */
+
 void push(ActionType type, int id, char* title, char* genre,
           int year, float old_rating, int old_watched) {
     StackNode* node = (StackNode*)malloc(sizeof(StackNode));
@@ -70,7 +52,6 @@ void push(ActionType type, int id, char* title, char* genre,
     stackTop   = node;
 }
  
-/* Pop the top action from the stack */
 StackNode* pop() {
     if (!stackTop) return NULL;
     StackNode* top = stackTop;
@@ -78,14 +59,12 @@ StackNode* pop() {
     return top;
 }
  
-/* Check if stack is empty */
+
 int isStackEmpty() { return stackTop == NULL; }
  
-/* ============================================================
-   SECTION 3 — LINKED LIST OPERATIONS
-   ============================================================ */
+
  
-/* --- Add movie at the front of the list --- */
+
 Movie* addMovie(Movie* head, int id, char* title,
                 char* genre, int year) {
     Movie* node = (Movie*)malloc(sizeof(Movie));
@@ -103,7 +82,7 @@ Movie* addMovie(Movie* head, int id, char* title,
     return node;
 }
  
-/* --- Delete movie by ID --- */
+
 Movie* deleteMovie(Movie* head, int id) {
     Movie *curr = head, *prev = NULL;
     while (curr) {
@@ -124,7 +103,7 @@ Movie* deleteMovie(Movie* head, int id) {
     return head;
 }
  
-/* --- Search movie by title (case-insensitive) --- */
+
 Movie* searchMovie(Movie* head, char* title) {
     Movie* curr = head;
     while (curr) {
@@ -134,7 +113,7 @@ Movie* searchMovie(Movie* head, char* title) {
     return NULL;
 }
  
-/* --- Display all movies --- */
+
 void displayAll(Movie* head) {
     if (!head) { printf("\n  [!] No movies in the system.\n"); return; }
     printf("\n  %-5s %-26s %-14s %-6s %-7s %-8s\n",
@@ -150,7 +129,7 @@ void displayAll(Movie* head) {
     }
 }
  
-/* --- Rate a movie --- */
+
 Movie* rateMovie(Movie* head, int id, float rating) {
     Movie* curr = head;
     while (curr) {
@@ -167,7 +146,7 @@ Movie* rateMovie(Movie* head, int id, float rating) {
     return head;
 }
  
-/* --- Mark movie as watched --- */
+
 Movie* markWatched(Movie* head, int id) {
     Movie* curr = head;
     while (curr) {
@@ -184,16 +163,16 @@ Movie* markWatched(Movie* head, int id) {
     return head;
 }
  
-/* --- Display top-rated movies (simple selection sort display) --- */
+
 void displayTopRated(Movie* head) {
     if (!head) { printf("\n  [!] No movies to show.\n"); return; }
  
-    /* Count movies */
+   
     int count = 0;
     Movie* curr = head;
     while (curr) { count++; curr = curr->next; }
  
-    /* Copy pointers into array */
+
     Movie** arr = (Movie**)malloc(count * sizeof(Movie*));
     if (!arr) { printf("Memory error!\n"); return; }
     curr = head;
@@ -216,7 +195,7 @@ void displayTopRated(Movie* head) {
     free(arr);
 }
  
-/* --- Undo last action --- */
+
 Movie* undoLastAction(Movie* head) {
     if (isStackEmpty()) {
         printf("\n  [!] Nothing to undo.\n");
@@ -292,7 +271,7 @@ Movie* undoLastAction(Movie* head) {
     return head;
 }
  
-/* --- Free all memory on exit --- */
+
 void freeAll(Movie* head) {
     while (head) {
         Movie* tmp = head;
@@ -305,9 +284,7 @@ void freeAll(Movie* head) {
     }
 }
  
-/* ============================================================
-   SECTION 4 — MAIN MENU
-   ============================================================ */
+
  
 int main() {
     Movie* head  = NULL;
@@ -318,7 +295,7 @@ int main() {
     int   id, year;
     float rating;
  
-    /* Preload some sample movies */
+    
     head = addMovie(head, nextId++, "Inception",       "Sci-Fi",  2010);
     head = addMovie(head, nextId++, "The Dark Knight",  "Action",  2008);
     head = addMovie(head, nextId++, "Interstellar",     "Sci-Fi",  2014);
